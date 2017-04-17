@@ -12,7 +12,6 @@ import (
 type Requests struct {
 	Url string
 	StatusCode int
-	Charset string
 }
 
 // 传入参数：params 必须是string的map
@@ -29,16 +28,16 @@ func (c *Requests)Get(theUrl string,params map[string]string) (io.Reader,error) 
 			if readerString == ""{
 				readerString = fmt.Sprintf("%s=%s",k,url.QueryEscape(v)) //进行URL编码的参数
 			}else {
-				readerString = fmt.Sprintf("$s&%s=%s",readerString,k,url.QueryEscape(v))
+				readerString = fmt.Sprintf("%s&%s=%s",readerString,k,url.QueryEscape(v))
 			}
 		}
-		realUrl = fmt.Sprintf("%s?ie=UTF-8&%s",theUrl,readerString)
+		realUrl = fmt.Sprintf("%s?%s",theUrl,readerString)
 	}else {
 		realUrl = theUrl
 	}
+	fmt.Println(realUrl)
 	req,err := http.NewRequest("GET",realUrl,nil)
 	if err != nil{
-		fmt.Println(err)
 		return nil,err
 	}
 	req.Header.Set("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36")
